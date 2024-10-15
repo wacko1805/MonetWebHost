@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.MonetWebAdapter" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Enabling dynamic colors -->
+        <item name="android:forceDarkAllowed">true</item>
+    </style>
+
+</resources>

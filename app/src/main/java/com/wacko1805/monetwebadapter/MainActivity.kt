@@ -2,16 +2,10 @@ package com.wacko1805.monetwebadapter
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.ui.Modifier
-import com.wacko1805.monetwebadapter.ui.theme.MonetWebAdapterTheme
 
 class MainActivity : ComponentActivity() {
 
@@ -24,15 +18,16 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MonetWebAdapterTheme {
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Text("MonetWebAdapter is running @ localhost:8192")
-                }
-            }
-        }
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            setContentView(R.layout.activity_main)
+
+            // Find the TextView by its ID
+            val statusTextView: TextView = findViewById(R.id.statusTextView)
+
+            // Set the text programmatically
+            statusTextView.text = "Monet Web Adapter is running @ localhost:8192"
+
 
         // Start the service when the app launches
         startService(Intent(this, HttpServerService::class.java))

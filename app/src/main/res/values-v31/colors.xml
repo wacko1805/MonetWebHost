@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@android:color/system_accent1_100</color> <!-- Example color -->
+    <color name="colorOnPrimary">@android:color/system_accent1_1000</color> <!-- Example color -->
+    <color name="colorSecondary">#03DAC5</color> <!-- Example color -->
+    <color name="colorOnSecondary">#000000</color> <!-- Example color -->
+    <color name="colorOnBackground">@android:color/system_accent1_100</color>
+    <color name="colorBackground">@android:color/system_neutral2_50</color>
+</resources>

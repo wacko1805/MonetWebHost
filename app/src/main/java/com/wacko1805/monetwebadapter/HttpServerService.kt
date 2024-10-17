@@ -10,10 +10,12 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import java.net.BindException
 
 class HttpServerService : android.app.Service() {
 
     private lateinit var server: HttpServer
+    private var isServerRunning = false
 
     override fun onCreate() {
         super.onCreate()
@@ -31,12 +33,23 @@ class HttpServerService : android.app.Service() {
 
         createNotificationChannel()
 
-        // Start the HTTP server in a separate thread
-        Thread {
-            Log.d("HttpServerService", "Starting HTTP server...")
-            server.start()
-            Log.d("HttpServerService", "HTTP server started.")
-        }.start()
+        // Start the HTTP server in a separate thread if it's not already running
+        if (!isServerRunning) {
+            Thread {
+                try {
+                    Log.d("HttpServerService", "Starting HTTP server...")
+                    server.start()
+                    isServerRunning = true
+                    Log.d("HttpServerService", "HTTP server started.")
+                } catch (e: BindException) {
+                    Log.e("HttpServerService", "Port is already in use. Server not started.", e)
+                } catch (e: Exception) {
+                    Log.e("HttpServerService", "Error starting server", e)
+                }
+            }.start()
+        } else {
+            Log.d("HttpServerService", "HTTP server is already running.")
+        }
 
         // Create the notification
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
@@ -44,10 +57,10 @@ class HttpServerService : android.app.Service() {
             .setContentText("Local Monet Web Adapter is running")
             .setSmallIcon(R.drawable.ic_launcher_foreground) // Replace with your icon resource
             .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setOngoing(true) // Makes the notification persistent
-            .setAutoCancel(false) // Prevents the notification from being dismissed
-            .setVisibility(NotificationCompat.VISIBILITY_SECRET) // Keeps it hidden
-            .setCategory(NotificationCompat.CATEGORY_SERVICE) // Marks it as a service notification
+            .setOngoing(true)
+            .setAutoCancel(false)
+            .setVisibility(NotificationCompat.VISIBILITY_SECRET)
+            .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .build()
 
         // Start the service as a foreground service with the notification
@@ -68,21 +81,23 @@ class HttpServerService : android.app.Service() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d("HttpServerService", "Service destroyed")
-        server.stop()
+        if (isServerRunning) {
+            server.stop()
+            isServerRunning = false
+            Log.d("HttpServerService", "HTTP server stopped.")
+        }
     }
 
-    // Create notification channel for Android 8.0 and above
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
                 "Monet Web Adapter",
-                NotificationManager.IMPORTANCE_LOW // Use low importance so it stays in the notification bar without disturbing
+                NotificationManager.IMPORTANCE_LOW
             ).apply {
                 description = "Notification channel for the HTTP server service"
             }
 
-            // Create the notification channel
             val notificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)

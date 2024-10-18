@@ -46,8 +46,17 @@
                 android:textStyle="bold"
                 android:textColor="?attr/colorOnSurface" />
 
+            <TextView
+                android:id="@+id/card_view_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text"
+                android:textSize="18sp"
+                android:textColor="?attr/colorOnSurface" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MonetWebAdapter</string>
+    <string name="text">Please ensure that battery optimisation is disabled for proper functionality of the app!</string>
 </resources>
